@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Ticket extends Model
 {
     protected $fillable = [
-        'ticket_event_id',
-        'ticket_name',
-        'ticket_price',
-        'ticket_quantity',
-        'ticket_available',
+        'event_id',
+        'ticket_type',
+        'price',
+        'quantity',
+        'available',
     ];
     public function event()
     {
@@ -21,6 +21,6 @@ class Ticket extends Model
 
     public function bookings()
     {
-        return $this->hasMany(Booking::class);
+        return $this->belongsToMany(Booking::class)->withPivot('quantity');
     }
 }

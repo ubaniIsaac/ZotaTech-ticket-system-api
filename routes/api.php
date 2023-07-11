@@ -23,6 +23,20 @@ Route::prefix('v1')->group(function () {
     Route::any('/', function () {
         return response()->json(['message' => 'Welcome to Elite Homes API'], 200);
     });
+    Route::group(['prefix' => 'api/events/{eventId}'], function () {
+        // Ticket routes
+        Route::get('/tickets', [TicketController::class, 'index']);
+        Route::post('/tickets', [TicketController::class, 'store']);
+        Route::get('/tickets/{ticketId}', [TicketController::class, 'show']);
+        Route::put('/tickets/{ticketId}', [TicketController::class, 'update']);
+        Route::delete('/tickets/{ticketId}', [TicketController::class, 'destroy']);
+    
+        // Booking routes
+        Route::get('/bookings', [BookingController::class, 'index']);
+        Route::post('/bookings', [BookingController::class, 'store']);
+        Route::get('/bookings/{booking}', [BookingController::class, 'show']);
+        Route::delete('/bookings/{booking}', [BookingController::class, 'destroy']);
+    });
 
 
 

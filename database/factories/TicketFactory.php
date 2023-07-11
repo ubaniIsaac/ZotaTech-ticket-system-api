@@ -17,11 +17,11 @@ class TicketFactory extends Factory
     public function definition(): array
     {
         return [
-            'ticket_event_id'=>fake()->randomDigitNotZero(),
-            'ticket_name'=>fake()->name(),
-            'ticket_price'=>fake()->randomNumber(),
-            'ticket_quantity'=>fake()->randomDigit(),
-            'ticket_available'=>fake()->randomNumber(0,1),
+            'event_id'=>fake()->uuid(),
+            'ticket_type'=>fake()->randomDigit(),
+            'price'=>fake()->randomDigit(),
+            'quantity'=>fake()->randomDigitNotNull(),
+            'available'=>fake()->randomDigit(),
         ];
     }
 }
