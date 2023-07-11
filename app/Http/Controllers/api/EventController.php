@@ -6,6 +6,7 @@ use App\Helper\Helper;
 use App\Models\{Event, Url};
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Resources\EventResources;
 use App\Http\Requests\EventRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -61,12 +62,17 @@ class EventController extends Controller
             'start_date' => $data['start_date'],
             'end_date' => $data['end_date'],
             'time' => $data['time'],
-            'available_seats' => $data['capacity'],
+            'type' => $data['type'],
+            'capacity' => $data['capacity'],
+            'available_seats' => $data['capacity'] ?? $data['available_seats'],
             'price' => $data['type'] === 'free' ? 0 : $data['price'],
+            'image' => $data['image'] ?? Helper::getRandomImage(),
             'user_id' => Auth::user()->id,
         ]);
 
-
+        if($request->hasFile('image')&& !empty($request->image) ){
+            $data->addMediaFromRequest('image')->toMediaCollection('image');
+        }
 
         $url = Url::create([
                 'long_url' => $url_data['long_url'],
@@ -77,12 +83,12 @@ class EventController extends Controller
                 ]);
 
 
+
         return response()->json([
             'message' => 'Event created successfully',
-            'event' => $data,
-            'url' => $url
+            'event' => new EventResources($data),
         ], 201);
-    }
+    }   
 
 
     /**

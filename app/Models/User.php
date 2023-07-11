@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,11 +13,14 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Str;
-// use Laravel\Sanctum\HasApiTokens as SanctumHasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class User extends Authenticatable
+
+
+class User extends Authenticatable implements HasMedia
 {
-    use HasApiTokens,  HasFactory, Notifiable, HasUlids;
+    use HasApiTokens,  HasFactory, Notifiable, HasUlids, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -52,6 +57,13 @@ class User extends Authenticatable
     ];
 
 
+    public function image(): Attribute 
+    {
+        // return $this->getFirstMediaUrl('profile');
+
+        return Attribute::make(get: fn () => $this->getFirstMediaUrl('profile')? : 'https://ui-avatars.com/api/?name=' . $this->name . '&color=7F9CF5&background=EBF4FF' ) ;
+    }
+
     /**
      * Get the events for the user.
      */
@@ -59,6 +71,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Event::class);
     }
+
 
 
     /**

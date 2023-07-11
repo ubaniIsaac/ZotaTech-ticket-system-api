@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
             Schema::create('urls', function (Blueprint $table) {
-                $table->ulid('id')->primary();
+                $table->ulid('id')->primary()->uniqid();
                 $table->string('long_url');
                 $table->string('short_id');
                 $table->string('short_url');

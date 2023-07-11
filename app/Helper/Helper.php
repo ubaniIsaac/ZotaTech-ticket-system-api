@@ -3,6 +3,7 @@
 namespace App\Helper;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 
 class Helper {
@@ -29,5 +30,12 @@ class Helper {
             'short_id' => $ulid,
             'short_url' => $short_url,
         ];
+    }
+
+    public static function getRandomImage()
+    {
+        $image = Http::get('https://robohash.org/'. Str::random(10));
+        
+        return $image;
     }
 }

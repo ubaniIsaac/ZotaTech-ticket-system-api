@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('events', function (Blueprint $table) {
             //
-            $table->foreignUlid('url_id')->constrained('urls')->onDelete('cascade');
+            // $table->foreignUlid('url_id')->constrained('urls')->onDelete('cascade');
         });
     }
 
