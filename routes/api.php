@@ -35,25 +35,35 @@ Route::prefix('v1')->group(function () {
 
         Route::post('login', [AuthController::class, 'login'])->name('login');
 
-        Route::get('/{short_link}', [RedirectController::class, 'redirect'])->name('redirect');
-
         Route::post('users/{id}', [UserController::class, 'show'])->name('show');
 
+        Route::get('events/{slug}', [EventController::class, 'slug'])->name('slug');
+
         Route::post('events/{id}', [EventController::class, 'show'])->name('show');
+
+        Route::get('e/{shortlink}', [EventController::class, 'redirect'])->name('redirect');
+
     });
 
 
     //Declare Authenticated routes
     Route::group(['middleware' => 'auth:api'], static function () {
 
-
+        //User routes
         Route::prefix('users')->middleware(['role:user'])->group(function () {
             Route::delete('/{id}', [UserController::class, 'destroy'])->name('index');
             Route::put('/{id}', [UserController::class, 'update'])->name(' update');
         });
 
+
+        //Events routes
         Route::prefix('events')->group(function (){
             Route::post('/', [EventController::class, 'store'])->name('store');
+            
+            Route::group(['middleware' => 'isOwner:true'], function () {
+                Route::put('/{id}', [EventController::class, 'update'])->name('update');
+                Route::delete('/{id}', [EventController::class, 'destroy'])->name('destroy');
+            });
         }); 
     });
 });

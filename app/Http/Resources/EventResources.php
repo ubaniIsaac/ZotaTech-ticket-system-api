@@ -24,8 +24,8 @@ class EventResources extends JsonResource
                 'image' => [
                     'file_name' => $this->image->file_name,
                     'mine_type' => $this->image->mime_type,
-                    'file_size' => $this->image->file_size,
-                    'url' => $this->image->original_url,
+                    'file_size' => $this->image->size,
+                    'image_url' => $this->image->original_url,
                 ],
                 'date' => $this->date,
                 'time' => $this->time,

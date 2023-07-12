@@ -27,6 +27,22 @@ class EventController extends Controller
         ], 200);
     }
 
+    public function slug(string $slug)
+    {
+        $url_id= explode('-', $slug)[6];
+
+        $data = Url::where('short_id', $url_id)->first();
+        $event =  Event::where('id', $data->event_id)->first();
+
+
+        if (!$event) {
+            return response()->json(['message' => 'Event not found'], 404);
+        }
+
+        return response()->json(['event' => new EventResources($event)], 200);
+    }
+
+
     /**
      * Get a specific event.
      * @param  string  $id
@@ -38,10 +54,12 @@ class EventController extends Controller
         $event = Event::find($id);
 
         if (!$event) {
-            return response()->json(['message' => 'Event not found'], 404);
+            return response()->json(['message' => 'Event notddd found'], 404);
         }
 
-        return response()->json(['event' => $event], 200);
+        return response()->json(
+            ['message' => 'Event retrieved sucessfully', 
+            'event' => new EventResources($event)], 200);
     }
 
     /**
@@ -66,7 +84,7 @@ class EventController extends Controller
             'capacity' => $data['capacity'],
             'available_seats' => $data['capacity'] ?? $data['available_seats'],
             'price' => $data['type'] === 'free' ? 0 : $data['price'],
-            'image' => $data['image'] ?? Helper::getRandomImage(),
+            'image' => $data['image'],
             'user_id' => Auth::user()->id,
         ]);
 
@@ -90,6 +108,18 @@ class EventController extends Controller
         ], 201);
     }   
 
+    public function redirect($short_id)
+    {
+        $url = Url::where('short_id', $short_id)->first();
+
+        if (!$url) {
+            return response()->json(['message' => 'Url not found'], 404);
+        }
+
+        $url->increment('clicks');
+
+        return redirect($url->long_url);
+    }
 
     /**
      * Update the specified event in storage.
