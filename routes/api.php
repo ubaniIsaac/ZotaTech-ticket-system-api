@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\{AuthController, UserController};
+use App\Http\Controllers\api\{AuthController, UserController, EventController, RedirectController };
 use App\Models\User;
+use Illuminate\Support\Facades\Redis;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,7 @@ Route::prefix('v1')->group(function () {
 
     /// Declare the heartbeat route for the API
     Route::any('/', function () {
-        return response()->json(['message' => 'Welcome to Elite Homes API'], 200);
+        return response()->json(['message' => 'Welcome to Open Tickets Apis'], 200);
     });
     Route::group(['prefix' => 'api/events/{eventId}'], function () {
         // Ticket routes
@@ -48,7 +49,11 @@ Route::prefix('v1')->group(function () {
 
         Route::post('login', [AuthController::class, 'login'])->name('login');
 
+        Route::get('/{short_link}', [RedirectController::class, 'redirect'])->name('redirect');
+
         Route::post('users/{id}', [UserController::class, 'show'])->name('show');
+
+        Route::post('events/{id}', [EventController::class, 'show'])->name('show');
     });
 
 
@@ -60,5 +65,9 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{id}', [UserController::class, 'destroy'])->name('index');
             Route::put('/{id}', [UserController::class, 'update'])->name(' update');
         });
+
+        Route::prefix('events')->group(function (){
+            Route::post('/', [EventController::class, 'store'])->name('store');
+        }); 
     });
 });
