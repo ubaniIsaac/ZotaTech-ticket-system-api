@@ -21,8 +21,8 @@ class Helper {
 
         $domain = Helper::getDomain();
 
-        $long_url = 'https://'. $domain .'/'.$text. '/tickets?' .$ulid;
-        $short_url = 'https://'. $domain .'/'.$ulid;
+        $long_url = 'https://'. $domain .'/api/v1/events/'.$text. '-tickets-' .$ulid;
+        $short_url = 'https://'. $domain .'/api/v1/e/'.$ulid;
 
 
         return [
@@ -34,8 +34,18 @@ class Helper {
 
     public static function getRandomImage()
     {
-        $image = Http::get('https://robohash.org/'. Str::random(10));
-        
-        return $image;
+        $response = Http::get('https://robohash.org/' . Str::random(10));
+
+    if ($response->ok()) {
+        $contentType = $response->headers()['Content-Type'][0];
+        $imageContent = $response->body();
+
+        if (strpos($contentType, 'image') !== false) {
+            $imageContent = mb_convert_encoding($imageContent, 'UTF-8', 'UTF-8');
+            return $imageContent;
+        }
+    }
+
+    return null;  // Return null or handle the error case as needed
     }
 }
