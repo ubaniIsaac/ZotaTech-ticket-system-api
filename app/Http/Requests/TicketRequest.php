@@ -22,10 +22,10 @@ class TicketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ticket_event_id' => 'required|exists:events,id',
-            'ticket_name' => 'required',
-            'ticket_price' => 'required|numeric',
-            'ticket_quantity' => 'required|integer|min:1',
+            'event_id' => 'required|exists:events,id',
+            'ticket_type' => 'required',
+            'price' => 'required|numeric',
+            'quantity' => 'required|integer|min:1',
         ];
     }
 }
