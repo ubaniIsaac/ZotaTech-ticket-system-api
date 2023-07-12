@@ -56,11 +56,20 @@ Route::prefix('v1')->group(function () {
         });
 
 
+        //Admin routes
+        Route::prefix('admin')->middleware(['role:admin'])->group(function () {
+            Route::apiResource('users', UserController::class)->except(['update', 'destroy']);
+
+            Route::apiResource('events', EventController::class)->except(['show', 'slug', 'redirect']);
+        });
+
+
         //Events routes
         Route::prefix('events')->group(function (){
             Route::post('/', [EventController::class, 'store'])->name('store');
+
             
-            Route::group(['middleware' => 'isOwner:true'], function () {
+            Route::group(['middleware' => 'isOwner'], function () {
                 Route::put('/{id}', [EventController::class, 'update'])->name('update');
                 Route::delete('/{id}', [EventController::class, 'destroy'])->name('destroy');
             });
