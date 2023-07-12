@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TicketRequest;
 use App\Http\Resources\TicketCollection;
 use App\Http\Resources\TicketResource;
+use App\Models\Event;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,13 +22,15 @@ class TicketController extends Controller
         //return response()->json(['data' => $tickets]);
     }
 
-    public function store(TicketRequest $request): JsonResponse
+    public function store(TicketRequest $request, Event $event): JsonResponse
     {
 
         $ticket = Ticket::create($request->validated());
+        $ticket->event()->associate($event);
 
         return response()->json([
             'data' => new TicketResource($ticket)
+            
         ], Response::HTTP_CREATED);
     }
 
@@ -46,6 +49,15 @@ class TicketController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
         
+    }
+    public function validateEventTicket(Event $event, Ticket $ticket):JsonResponse
+    {
+        if ($ticket->event_id !== $event->id){
+            return response()->json(['error' => 'Ticket not found for the specified event'], Response::HTTP_NOT_FOUND);
+        }
+        return response()->json([
+            'Message'=>'Ticket found for the specified event',
+            'data' => $ticket], Response:: HTTP_FOUND);
     }
 
     public function update(Request $request, Ticket $ticket):JsonResponse
@@ -68,8 +80,24 @@ class TicketController extends Controller
 
         
     }
+    public function updateSpecificTicket(TicketRequest $request, Event $event, Ticket $ticket):JsonResponse
+    {
+        if ($ticket->event_id !== $event->id) {
+            return response()->json(['error' => 'Ticket not found for the specified event'], Response::HTTP_NOT_FOUND);
+        }
+        $validatedData = $request->validate([
+            'ticket_type' => 'required',
+            'price' => 'numeric',
+            'quantity' => 'integer|min:1',
+        ]);
+        $ticket->update($validatedData);
 
-    public function destroy(Ticket $ticket)
+        return response()->json([
+            'Message'=>'Ticket Updated Successfully',
+            'data' => $ticket], Response::HTTP_OK);
+    }
+
+    public function destroy(Ticket $ticket):JsonResponse
     {
         try{
             $ticket = Ticket::findOrFail($ticket);
@@ -84,5 +112,15 @@ class TicketController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
        
+    }
+    public function deleteSpecificTicket(Event $event, Ticket $ticket)
+    {
+        if ($ticket->event_id !== $event->id) {
+            return response()->json(['error' => 'Ticket not found for the specified event'], Response::HTTP_NOT_FOUND);
+        }
+    
+        $ticket->delete();
+    
+        return response()->json(['message' => 'Ticket deleted successfully'], Response::HTTP_OK);
     }
 }

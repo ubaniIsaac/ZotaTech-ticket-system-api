@@ -20,7 +20,7 @@ class TicketFactory extends Factory
             'event_id'=>fake()->uuid(),
             'ticket_type'=>fake()->randomDigit(),
             'price'=>fake()->randomDigit(),
-            'quantity'=>fake()->randomDigitNotNull(),
+            'quantity'=>fake()->randomNumber(),
             'available'=>fake()->randomDigit(),
         ];
     }

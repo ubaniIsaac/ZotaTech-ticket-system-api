@@ -12,14 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bookings', function (Blueprint $table) {
-            $table->foreignUuid('user_id');
-            $table->string('name');
-            $table->string('phone_number');
-            $table->string('email');
-            $table->double('total_price');
+            $table->id();
+            $table->foreignUlid('user_id');
+            $table->decimal('total_price', 8, 2);
             $table->date('booking_date');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
+
+        /*Schema::create('booking_ticket', function (Blueprint $table) {
+            $table->foreignUlid('booking_id');
+            $table->foreignUlid('ticket_id');
+            $table->integer('quantity');
+            $table->timestamps();
+
+            $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
+            $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');
+        });*/
     }
 
     /**
@@ -27,6 +37,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('booking_ticket');
         Schema::dropIfExists('bookings');
     }
 };

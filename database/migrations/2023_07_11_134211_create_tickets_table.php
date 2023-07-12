@@ -12,12 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tickets', function (Blueprint $table) {
-            $table->foreignUuid('event_id');
+
+            $table->foreignUlid('event_id');
             $table->string('ticket_type');
-            $table->string('price');
+            $table->decimal('price', 8, 2);
             $table->integer('quantity');
-            $table->string('available');
+            $table->integer('available')->default(0);
             $table->timestamps();
+
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
         });
     }
 

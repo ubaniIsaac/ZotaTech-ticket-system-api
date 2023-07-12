@@ -17,11 +17,11 @@ class TicketCollection extends ResourceCollection
         //return parent::toArray($request);
         return[
             'id'=>strval($this->id),
-            'ticket_name'=>$this->ticket_name,
-            'ticket_event_id'=>$this->ticket_event_id,
-            'ticket_price'=>$this->ticket_price,
-            'ticket_quantity'=>$this->ticket_price,
-            'ticket_available'=>$this->ticket_available,
+            'event_id'=>$this->event_id,
+            'ticket_type'=>$this->ticket_type,
+            'price'=>$this->price,
+            'quantity'=>$this->quantity,
+            'available'=>$this->available,
         ];
     }
 }

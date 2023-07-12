@@ -24,6 +24,7 @@ Route::prefix('v1')->group(function () {
     Route::any('/', function () {
         return response()->json(['message' => 'Welcome to Open Tickets Apis'], 200);
     });
+    /*
     Route::group(['prefix' => 'api/events/{eventId}'], function () {
         // Ticket routes
         Route::get('/tickets', [TicketController::class, 'index']);
@@ -37,8 +38,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/bookings', [BookingController::class, 'store']);
         Route::get('/bookings/{booking}', [BookingController::class, 'show']);
         Route::delete('/bookings/{booking}', [BookingController::class, 'destroy']);
-    });
+    });*/
 
+   
 
 
     // Declare unauthenticated routes
@@ -89,6 +91,17 @@ Route::prefix('v1')->group(function () {
                 Route::put('/{id}', [EventController::class, 'update'])->name('update');
                 Route::delete('/{id}', [EventController::class, 'destroy'])->name('destroy');
             });
-        }); 
+        });
+        
+        //Tickets Routes
+    //Route to Create a new ticket for an event.
+    Route::post('/events/{event}/tickets', [TicketController::class, 'store'])->name('store');
+    
+    //Route to show that a ticket belongs to a specific event or Retrieve details of a specific ticket of an event.
+    Route::get('/events/{event}/tickets/{ticket}', [TicketController::class, 'validateEventTicket'])->name('validateEventTicket');
+    // Route to Update details of a specific ticket of an event.
+    Route::put('/events/{event}/tickets/{ticket}', [TicketController::class, 'updatespecificticket'])->name('updateSpecificTicket');
+    //Route to Delete a specific ticket.
+    Route::delete('/events/{event}/tickets/{ticket}', [TicketController::class, 'deleteSpecificTicket'])->name('deleteSpecificTicket');
     });
 });
