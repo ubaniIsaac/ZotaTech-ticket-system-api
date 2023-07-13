@@ -10,7 +10,6 @@ class UserController extends Controller
 {
     /**
      * Get a specific user.
-     *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -27,7 +26,6 @@ class UserController extends Controller
 
     /**
      * Update the specified user in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -47,7 +45,6 @@ class UserController extends Controller
 
     /**
      * Remove the specified user from storage.
-     *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
