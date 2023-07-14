@@ -128,4 +128,9 @@ class Helper
         $url->save();
         // return $url;
     }
+
+    public static function generateToken()
+    {
+        return Str::random(6);
+    }
 }

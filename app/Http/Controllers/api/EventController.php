@@ -105,36 +105,12 @@ class EventController extends Controller
 
     public function store(EventRequest $request)
     {
-        $data = $request->all();
-        $url_data = Helper::generateLink($data['title']);
 
-        $data = Event::create([
-            'title' => $data['title'],
-            'description' => $data['description'],
-            'location' => $data['location'],
-            'start_date' => $data['start_date'],
-            'end_date' => $data['end_date'],
-            'time' => $data['time'],
-            'type' => $data['type'],
-            'capacity' => $data['capacity'],
-            'available_seats' => $data['capacity'] ?? $data['available_seats'],
-            'price' => $data['type'] === 'free' ? 0 : $data['price'],
-            'image' => $data['image'],
-            'user_id' => Auth::user()->id,
-        ]);
+        $data = Event::create(array_merge($request->validated(), ['user_id' => Auth::user()->id]));
 
         if ($request->hasFile('image') && !empty($request->image)) {
             $data->addMediaFromRequest('image')->toMediaCollection('image');
         }
-
-        $url = Url::create([
-            'long_url' => $url_data['long_url'],
-            'short_id' => $url_data['short_id'],
-            'short_url' => $url_data['short_url'],
-            'event_id' => $data->id,
-            'clicks' => 0,
-        ]);
-
 
         return response()->json([
             'message' => 'Event created successfully',

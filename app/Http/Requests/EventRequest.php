@@ -31,7 +31,7 @@ class EventRequest extends FormRequest
             'capacity' => 'required|integer',
             'available_seats' => 'nullable|integer',
             'price' => 'nullable|integer',
-            'user_id' => 'nullable|integer',
+            // 'user_id' => 'nullable|integer',
             'start_date' => 'required|string',
             'end_date' => 'required|string',
             'time' => 'required|string',
