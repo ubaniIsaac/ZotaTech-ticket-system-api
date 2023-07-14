@@ -6,7 +6,7 @@ use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\{Hash, Cache};
 use App\Http\Requests\{SignUpRequest, LoginRequest};
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,6 +26,8 @@ class AuthController extends Controller
         }
 
         $token = $user->generateUserRole();
+
+        Cache::put('user'.$user->id, $user, now()->addHour(1));
 
         return response()->json([
             'message' => 'User logged in successfully',
@@ -47,6 +49,8 @@ class AuthController extends Controller
 
     public function logout(): JsonResponse
     {
+
+        Cache::forget('user'.auth()->user()->id);
         // Logic for handling user logout
         auth()->logout();
 
@@ -54,4 +58,14 @@ class AuthController extends Controller
             'message' => 'User logged out successfully'
         ], Response::HTTP_OK);
     }
+
+    public function forgotPassword(): JsonResponse
+    {
+        // Logic for handling forgot password
+
+        return response()->json([
+            'message' => 'Forgot password'
+        ], Response::HTTP_OK);
+    }
+        
 }

@@ -3,7 +3,7 @@
 namespace App\Helper;
 
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\{Http, Cache};
 
 
 class Helper {
@@ -47,5 +47,32 @@ class Helper {
     }
 
     return null;  // Return null or handle the error case as needed
+    }
+
+   public static function saveToCache($key, $value, $time)
+   {
+       return Cache::remember($key, $time, function () use ($value) {
+           return $value;
+       });
+   }
+
+   public static function getFromCache($key, $id)
+   {
+       return Cache::get($key.$id);
+   }
+
+   public static function deleteFromCache($key, $id)
+   {
+       return Cache::forget($key.$id);
+   }
+
+    public static function deleteAllFromCache($key)
+    {
+         return Cache::forget($key);
+    }
+
+    public static function updateCache($key, $id, $value, $time)
+    {
+      return  Cache([$key . $id => $value], $time);
     }
 }
