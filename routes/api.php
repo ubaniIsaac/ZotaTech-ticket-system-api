@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\{AuthController, UserController, EventController, RedirectController };
+use App\Http\Controllers\api\{AuthController, UserController, EventController, TicketController};
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
 
@@ -25,7 +25,7 @@ Route::prefix('v1')->group(function () {
         return response()->json(['message' => 'Welcome to Open Tickets Apis'], 200);
     });
 
-   
+
 
     // Declare unauthenticated routes
     Route::group(['middleware' => 'guest'], function () {
@@ -37,6 +37,8 @@ Route::prefix('v1')->group(function () {
 
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
+        Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+
         Route::post('users/{id}', [UserController::class, 'show'])->name('show');
 
         Route::get('events/{slug}', [EventController::class, 'slug'])->name('slug');
@@ -44,7 +46,6 @@ Route::prefix('v1')->group(function () {
         Route::post('events/{id}', [EventController::class, 'show'])->name('show');
 
         Route::get('e/{shortlink}', [EventController::class, 'redirect'])->name('redirect');
-
     });
 
 
@@ -52,7 +53,9 @@ Route::prefix('v1')->group(function () {
     Route::group(['middleware' => 'auth:api'], static function () {
 
         //User routes
-        Route::prefix('users')->middleware(['role:user'])->group(function () {
+        Route::prefix('users')->middleware(['user.auth'])->group(function () {
+
+
             Route::delete('/{id}', [UserController::class, 'destroy'])->name('index');
             Route::put('/{id}', [UserController::class, 'update'])->name(' update');
         });
@@ -67,25 +70,25 @@ Route::prefix('v1')->group(function () {
 
 
         //Events routes
-        Route::prefix('events')->group(function (){
+        Route::prefix('events')->group(function () {
             Route::post('/', [EventController::class, 'store'])->name('store');
 
-            
-            Route::group(['middleware' => 'isOwner'], function () {
+
+            Route::group(['middleware' => 'owner'], function () {
                 Route::put('/{id}', [EventController::class, 'update'])->name('update');
                 Route::delete('/{id}', [EventController::class, 'destroy'])->name('destroy');
             });
         });
-        
+
         //Tickets Routes
-    //Route to Create a new ticket for an event.
-    Route::post('/events/{event}/tickets', [TicketController::class, 'store'])->name('store');
-    
-    //Route to show that a ticket belongs to a specific event or Retrieve details of a specific ticket of an event.
-    Route::get('/events/{event}/tickets/{ticket}', [TicketController::class, 'validateEventTicket'])->name('validateEventTicket');
-    // Route to Update details of a specific ticket of an event.
-    Route::put('/events/{event}/tickets/{ticket}', [TicketController::class, 'updatespecificticket'])->name('updateSpecificTicket');
-    //Route to Delete a specific ticket.
-    Route::delete('/events/{event}/tickets/{ticket}', [TicketController::class, 'deleteSpecificTicket'])->name('deleteSpecificTicket');
+        //Route to Create a new ticket for an event.
+        Route::post('/events/{event}/tickets', [TicketController::class, 'store'])->name('store');
+
+        //Route to show that a ticket belongs to a specific event or Retrieve details of a specific ticket of an event.
+        Route::get('/events/{event}/tickets/{ticket}', [TicketController::class, 'validateEventTicket'])->name('validateEventTicket');
+        // Route to Update details of a specific ticket of an event.
+        Route::put('/events/{event}/tickets/{ticket}', [TicketController::class, 'updatespecificticket'])->name('updateSpecificTicket');
+        //Route to Delete a specific ticket.
+        Route::delete('/events/{event}/tickets/{ticket}', [TicketController::class, 'deleteSpecificTicket'])->name('deleteSpecificTicket');
     });
 });
