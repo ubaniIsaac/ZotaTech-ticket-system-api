@@ -19,12 +19,13 @@ class EventController extends Controller
     public function index()
     {
         try {
-            $events = Helper::saveToCache('events', Event::all(), now()->addHour(1));
+            $events = Helper::saveToCache('events', Event::latest()->paginate(), now()->addHour(1));
+
 
 
             return response()->json([
-                'message' => 'Event index',
-                'data' => $events
+                'message' => 'Events retrieved successfully',
+                'data' => EventResources::collection($events)
             ], 200);
         } catch (\Throwable $th) {
 
@@ -50,7 +51,6 @@ class EventController extends Controller
                 $event = $cachedEvent;
             } else {
                 $event = Event::findOrFail($id);
-                // $event = Helper::saveToCache('events', $event->id, $event, now()->addHour(1));
             }
 
             Helper::updateEventClicks($event);

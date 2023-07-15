@@ -41,6 +41,8 @@ Route::prefix('v1')->group(function () {
 
         Route::post('users/{id}', [UserController::class, 'show'])->name('show');
 
+        Route::get('events', [EventController::class, 'index'])->name('index');
+
         Route::get('events/{slug}', [EventController::class, 'slug'])->name('slug');
 
         Route::post('events/{id}', [EventController::class, 'show'])->name('show');
