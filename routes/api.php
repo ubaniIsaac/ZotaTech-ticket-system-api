@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\{AuthController, UserController, EventController, TicketController};
+use App\Http\Controllers\api\{AuthController, UserController, EventController, TicketController, PaymentController};
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
 
@@ -48,6 +48,7 @@ Route::prefix('v1')->group(function () {
         Route::post('events/{id}', [EventController::class, 'show'])->name('show');
 
         Route::get('e/{shortlink}', [EventController::class, 'redirect'])->name('redirect');
+
     });
 
 
@@ -58,7 +59,7 @@ Route::prefix('v1')->group(function () {
         Route::prefix('users')->middleware(['user.auth'])->group(function () {
 
 
-            Route::delete('/{id}', [UserController::class, 'destroy'])->name('index');
+            Route::delete('/{id}', [UserController::class, 'destroy'])->name('delete');
             Route::put('/{id}', [UserController::class, 'update'])->name(' update');
         });
 
@@ -82,9 +83,14 @@ Route::prefix('v1')->group(function () {
             });
         });
 
+        Route::post('pay', [PaymentController::class, 'makePayment'])->name('pay');
+
         //Tickets Routes
+        //remove befor push
+        Route::get('/tickets', [TicketController::class, 'store'])->name('create-ticket');
+
+        Route::get('verifyTransaction', [PaymentController::class, 'verifyTransaction'])->name('verifyTransaction');
         //Route to Create a new ticket for an event.
-        Route::post('/events/{event}/tickets', [TicketController::class, 'store'])->name('store');
 
         //Route to show that a ticket belongs to a specific event or Retrieve details of a specific ticket of an event.
         Route::get('/events/{event}/tickets/{ticket}', [TicketController::class, 'validateEventTicket'])->name('validateEventTicket');

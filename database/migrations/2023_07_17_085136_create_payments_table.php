@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tickets', function (Blueprint $table) {
-
-            $table->ulid('id')->primary()->uniqid();
-            $table->foreignUlid('event_id');
-            $table->foreignUlid('user_id');
-            $table->string('ticket_type');
+        Schema::create('payments', function (Blueprint $table) {
+            $table->id();
             $table->double('amount', 20,8);
+            $table->foreignUlid('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUlid('event_id')->constrained('events')->cascadeOnDelete();
+            $table->string('ticket_type');
             $table->integer('quantity');
-            // $table->integer('available')->default(0);
+            $table->string('reference');
+            $table->string('status')->default('pending');
             $table->timestamps();
-
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
         });
     }
 
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tickets');
+        Schema::dropIfExists('payments');
     }
 };
