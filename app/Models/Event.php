@@ -79,14 +79,14 @@ class  Event extends Model implements HasMedia
     public static function booted()
     {
         parent::booted();
-        static::created(function (Event $event) {
-        $url_data = Helper::generateLink($event->title);
-         $event->url()->create([
-                'long_url' => $url_data['long_url'],
-                'short_id' => $url_data['short_id'],
-                'short_url' => $url_data['short_url'],
-                'clicks' => 0,
-            ]);
-        });
+        // static::created(function (Event $event) {
+        // $url_data = Helper::generateLink($event->title);
+        //  $event->url()->create([
+        //         'long_url' => $url_data['long_url'],
+        //         'short_id' => $url_data['short_id'],
+        //         'short_url' => $url_data['short_url'],
+        //         'clicks' => 0,
+        //     ]);
+        // });
     }
 }

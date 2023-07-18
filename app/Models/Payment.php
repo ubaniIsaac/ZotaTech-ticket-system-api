@@ -17,6 +17,5 @@ class Payment extends Model
         'ticket_type',
         'quantity',
         'status'
-        
     ];
 }

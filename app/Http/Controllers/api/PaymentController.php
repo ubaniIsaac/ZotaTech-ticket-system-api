@@ -42,7 +42,7 @@ class PaymentController extends Controller
         $result = $this->paymentService->initializeTransaction($data);
 
         return response()->json([
-            "message" => " Payament initialized",
+            "message" => "Payment initialized",
             "data" =>  $result,
             'status' => 200
         ]);
@@ -51,9 +51,10 @@ class PaymentController extends Controller
 
     public function verifyTransaction(Request $request): JsonResponse
     {
-        $response =  $this->paymentService->verifyTransaction($request->reference);
-
-        if($response['status'] ==true){
+        try {
+            $response =  $this->paymentService->verifyTransaction($request->reference);
+       
+        if($response['status'] == true){
             $payment = Payment::where('reference' ,$request->reference)->first();
             if($payment->status == 'successful'){
                 return response()->json([
@@ -78,6 +79,11 @@ class PaymentController extends Controller
             ]);
 
         }
+    } catch (\Throwable $th) {
+        return response()->json([
+            "message" => "Reference code invalid",
+        ],302);
+    }
 
         return response()->json([
             "message" => " Payament failed",

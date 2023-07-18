@@ -49,6 +49,9 @@ Route::prefix('v1')->group(function () {
 
         Route::get('e/{shortlink}', [EventController::class, 'redirect'])->name('redirect');
 
+        Route::get('verifyTransaction', [PaymentController::class, 'verifyTransaction'])->name('verifyTransaction');
+
+
     });
 
 
@@ -89,7 +92,6 @@ Route::prefix('v1')->group(function () {
         //remove befor push
         Route::get('/tickets', [TicketController::class, 'store'])->name('create-ticket');
 
-        Route::get('verifyTransaction', [PaymentController::class, 'verifyTransaction'])->name('verifyTransaction');
         //Route to Create a new ticket for an event.
 
         //Route to show that a ticket belongs to a specific event or Retrieve details of a specific ticket of an event.
