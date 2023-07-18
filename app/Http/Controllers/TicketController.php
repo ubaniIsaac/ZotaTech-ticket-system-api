@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TicketRequest;
 use App\Http\Resources\TicketCollection;
+use App\Events\BookTicket;
 use App\Http\Resources\TicketResource;
 use App\Models\Event;
+use App\Models\User;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,6 +29,10 @@ class TicketController extends Controller
 
         $ticket = Ticket::create($request->validated());
         $ticket->event()->associate($event);
+
+        $user = User::findorfail($ticket->user_id);
+
+        event(new BookTicket($user, $ticket));
 
         return response()->json([
             'data' => new TicketResource($ticket)
