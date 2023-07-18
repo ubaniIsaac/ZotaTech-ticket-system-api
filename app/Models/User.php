@@ -30,7 +30,6 @@ class User extends Authenticatable implements HasMedia
     protected $fillable = [
         'name',
         'email',
-        'profile_picture',
         'password',
         'confirm_password'
     ];
@@ -71,6 +70,11 @@ class User extends Authenticatable implements HasMedia
     public function events(): HasMany
     {
         return $this->hasMany(Event::class);
+    }
+
+    public function getEvents(): Attribute
+    {
+        return Attribute::make(get: fn () => User::events()->get());
     }
 
 

@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\{AuthController, UserController, EventController, RedirectController };
+use App\Http\Controllers\api\{AuthController, UserController, EventController, RedirectController,TicketController}
+;
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
 
@@ -25,7 +26,10 @@ Route::prefix('v1')->group(function () {
         return response()->json(['message' => 'Welcome to Open Tickets Apis'], 200);
     });
 
+    
+
    
+
 
     // Declare unauthenticated routes
     Route::group(['middleware' => 'guest'], function () {
@@ -63,6 +67,8 @@ Route::prefix('v1')->group(function () {
             Route::apiResource('users', UserController::class)->except(['update', 'destroy']);
 
             Route::apiResource('events', EventController::class)->except(['show', 'slug', 'redirect']);
+
+            Route::get('/tickets', [TicketController::class, 'index']);
         });
 
 
@@ -76,10 +82,22 @@ Route::prefix('v1')->group(function () {
                 Route::delete('/{id}', [EventController::class, 'destroy'])->name('destroy');
             });
         });
+
+        //Tickets Route
+        Route::prefix('tickets')->group(function (){
+            Route::post('/', [TicketController::class, 'store'])->name('store');
+            Route::get('/{id}', [TicketController::class, 'show']);
+            
+            
+            Route::group(['middleware' => 'ticketOwner'], function () {
+                Route::put('/{id}', [TicketController::class, 'update'])->name('update');
+                Route::delete('/{id}', [TicketController::class, 'destroy'])->name('destroy');
+            });
+        });
         
         //Tickets Routes
     //Route to Create a new ticket for an event.
-    Route::post('/events/{event}/tickets', [TicketController::class, 'store'])->name('store');
+    /*Route::post('/events/{event}/tickets', [TicketController::class, 'store'])->name('store');
     
     //Route to show that a ticket belongs to a specific event or Retrieve details of a specific ticket of an event.
     Route::get('/events/{event}/tickets/{ticket}', [TicketController::class, 'validateEventTicket'])->name('validateEventTicket');
@@ -87,5 +105,6 @@ Route::prefix('v1')->group(function () {
     Route::put('/events/{event}/tickets/{ticket}', [TicketController::class, 'updatespecificticket'])->name('updateSpecificTicket');
     //Route to Delete a specific ticket.
     Route::delete('/events/{event}/tickets/{ticket}', [TicketController::class, 'deleteSpecificTicket'])->name('deleteSpecificTicket');
+    */
     });
 });
