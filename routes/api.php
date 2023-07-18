@@ -25,31 +25,8 @@ Route::prefix('v1')->group(function () {
     Route::any('/', function () {
         return response()->json(['message' => 'Welcome to Open Tickets Apis'], 200);
     });
-    /*
-    Route::group(['prefix' => 'tickets', function () {
-        // Ticket routes
-        Route::get('/tickets', [TicketController::class, 'index']);
-        Route::post('/tickets/', [TicketController::class, 'store']);
-        Route::get('/tickets/{ticketId}', [TicketController::class, 'show']);
-        Route::put('/tickets/{ticketId}', [TicketController::class, 'update']);
-        Route::delete('/tickets/{ticketId}', [TicketController::class, 'destroy']);
+
     
-        // Booking routes
-        Route::get('/bookings', [BookingController::class, 'index']);
-        Route::post('/bookings', [BookingController::class, 'store']);
-        Route::get('/bookings/{booking}', [BookingController::class, 'show']);
-        Route::delete('/bookings/{booking}', [BookingController::class, 'destroy']);
-    });*/
-    Route::prefix('tickets')->group(function (){
-        Route::post('/', [TicketController::class, 'store'])->name('store');
-        Route::get('/tickets/{ticketId}', [TicketController::class, 'show']);
-        Route::get('/tickets', [TicketController::class, 'index']);
-        
-        Route::group(['middleware' => 'ticketOwner'], function () {
-            Route::put('/{id}', [TicketController::class, 'update'])->name('update');
-            Route::delete('/{id}', [TicketController::class, 'destroy'])->name('destroy');
-        });
-    });
 
    
 
@@ -90,6 +67,8 @@ Route::prefix('v1')->group(function () {
             Route::apiResource('users', UserController::class)->except(['update', 'destroy']);
 
             Route::apiResource('events', EventController::class)->except(['show', 'slug', 'redirect']);
+
+            Route::get('/tickets', [TicketController::class, 'index']);
         });
 
 
@@ -101,6 +80,18 @@ Route::prefix('v1')->group(function () {
             Route::group(['middleware' => 'isOwner'], function () {
                 Route::put('/{id}', [EventController::class, 'update'])->name('update');
                 Route::delete('/{id}', [EventController::class, 'destroy'])->name('destroy');
+            });
+        });
+
+        //Tickets Route
+        Route::prefix('tickets')->group(function (){
+            Route::post('/', [TicketController::class, 'store'])->name('store');
+            Route::get('/{id}', [TicketController::class, 'show']);
+            
+            
+            Route::group(['middleware' => 'ticketOwner'], function () {
+                Route::put('/{id}', [TicketController::class, 'update'])->name('update');
+                Route::delete('/{id}', [TicketController::class, 'destroy'])->name('destroy');
             });
         });
         

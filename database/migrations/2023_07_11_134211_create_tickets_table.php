@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
 
-            $table->foreignUlid('event_id');
+            $table->foreignUlid('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignUlid('event_id')->references('id')->on('events')->onDelete('cascade');
+            $table->ulid('id')->primary();
             $table->string('ticket_type');
-            $table->decimal('price', 8, 2);
+            $table->double('amount', 20, 8);
             $table->integer('quantity');
-            $table->integer('available')->default(0);
             $table->timestamps();
 
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
+            
         });
     }
 
