@@ -23,7 +23,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         GuestSignup::class => [
-            WelcomeMail::class
+            WelcomeListener::class
         ],
         BookTicket::class => [
             BookingListener::class
