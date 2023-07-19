@@ -35,7 +35,6 @@ class TicketController extends Controller
         $event = $ticket->event;
         $event->available_seats -= $ticket->quantity;
         $event->save();
-        dd($event->available_seats);
 
         $user = User::findorfail($ticket->user_id);
 
