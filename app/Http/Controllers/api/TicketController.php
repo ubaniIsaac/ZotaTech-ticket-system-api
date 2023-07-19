@@ -4,8 +4,10 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TicketRequest;
 use App\Http\Resources\TicketCollection;
+use App\Events\BookTicket;
 use App\Http\Resources\TicketResource;
 use App\Models\Event;
+use App\Models\User;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,15 +27,16 @@ class TicketController extends Controller
     {
 
         $data = array_merge($request->validated(), ['user_id' => Auth::user()->id]);
-        if($request->amount > 0){
-            redirect(route('pay', $data));
-        };
+       
         
         $ticket = Ticket::create($data);
         $event = $ticket->event;
         $event->available_seats -= $ticket->quantity;
         $event->save();
-        dd($event->available_seats);
+
+        $user = User::findorfail($ticket->user_id);
+
+        event(new BookTicket($user, $ticket));
 
         return response()->json([
             'data' => new TicketResource($ticket)
