@@ -24,7 +24,7 @@ Route::prefix('v1')->group(function () {
     /// Declare the heartbeat route for the API
     Route::any('/', function () {
         return response()->json(['message' => 'Welcome to Open Tickets Apis'], 200);
-    });
+    })->name('welcome');
 
     
 

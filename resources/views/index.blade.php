@@ -178,7 +178,7 @@
         <div class="left_ticket_container">
           <div class="event_title_container">
             <h1 class="company_title">Organizer : {{$eventOwner}}</h1>
-            <h2 class="event_title">Even{{$event}}</h2>
+            <h2 class="event_title">Event: {{$event}}</h2>
           </div>
 
           <div class="location_container">

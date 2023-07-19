@@ -70,20 +70,26 @@ class PaymentController extends Controller
 
                 $ticket_data = collect($payment)->except('id')->toArray();
 
-            $ticket = Ticket::create($ticket_data);
-            
-            return response()->json([
-                "message" => "Payment Successful. Ticket booked",
-                "data" =>  $ticket,
-                'status' => 200
-            ]);
+                $ticket = Ticket::create($ticket_data);
+                $event = $ticket->event;
+                $event->available_seats -= $ticket->quantity;
+                $event->save();
 
+                $user = User::findorfail($ticket->user_id);
+
+                event(new BookTicket($user, $ticket));
+
+                return response()->json([
+                    "message" => "Payment Successful. Ticket booked",
+                    "data" =>  $ticket,
+                    'status' => 200
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                "message" => "Reference code invalid",
+            ], 302);
         }
-    } catch (\Throwable $th) {
-        return response()->json([
-            "message" => "Reference code invalid",
-        ],302);
-    }
 
         return response()->json([
             "message" => " Payament failed",

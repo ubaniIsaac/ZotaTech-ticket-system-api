@@ -14,8 +14,6 @@ use App\Http\Controllers\api\PDFController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect( '/api/v1') ;
 });
 
-
-Route::get('/pdf', [PDFController::class, 'index'])->name('pdf');
