@@ -8,13 +8,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\EventResources;
 use App\Http\Requests\EventRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\{Auth, Cache};
 
 class EventController extends Controller
 {
     /**
      * Get all events.
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
