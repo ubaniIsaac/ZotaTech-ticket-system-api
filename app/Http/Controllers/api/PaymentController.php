@@ -71,6 +71,10 @@ class PaymentController extends Controller
             $ticket_data = collect($payment)->except('id')->toArray();
 
             $ticket = Ticket::create($ticket_data);
+            $event = $ticket->event;
+        $event->available_seats -= $ticket->quantity;
+        $event->save();
+        dd($event->available_seats);
             
             return response()->json([
                 "message" => "Payment Successful. Ticket booked",
