@@ -4,11 +4,13 @@ namespace App\Mail;
 
 use App\Models\Ticket;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
@@ -55,6 +57,18 @@ class BookingMail extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        $data =[
+            'name'=> $this->user->name,
+            'event' => $this->ticket->event->title,
+            'date' => $this->ticket->event->start_date,
+            'time' => $this->ticket->event->time,
+            'quantity' => $this->ticket->quantity,
+            'id' => $this->ticket->id,
+            'eventOwner'=>$this->ticket->event->user->name,
+            'location'=>$this->ticket->event->location,
+            'link' => 'http://127.0.0.1:8000/api/v1/tickets/'.$this->ticket->id,
+        ];
+        $pdf = Pdf::loadView('index', $data);
+        return [Attachment::fromData(fn () => $pdf->output(), 'ticket.pdf')];
     }
 }

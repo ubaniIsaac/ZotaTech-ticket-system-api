@@ -53,6 +53,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('verifyTransaction', [PaymentController::class, 'verifyTransaction'])->name('verifyTransaction');
 
+        Route::get('tickets/{id}', [TicketController::class, 'show']);
 
     });
 
@@ -91,7 +92,6 @@ Route::prefix('v1')->group(function () {
         //Tickets Route
         Route::prefix('tickets')->group(function (){
             Route::post('/', [TicketController::class, 'store'])->name('store');
-            Route::get('/{id}', [TicketController::class, 'show']);
             Route::post('pay', [PaymentController::class, 'makePayment'])->name('pay');
 
             

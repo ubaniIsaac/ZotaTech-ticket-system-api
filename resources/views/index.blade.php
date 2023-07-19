@@ -43,7 +43,7 @@
 
       .header_container {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-evenly;
         align-items: center;
       }
 
@@ -77,11 +77,11 @@
 
       .main_ticket_container {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-evenly;
         width: 100%;
         background-color: rgba(194, 194, 194, 0.233);
         padding: 20px;
-        column-gap: 10%;
+        /* column-gap: 10%; */
         flex-direction: column;
         border: 2px solid rgba(0, 0, 0, 0.875);
         border-top: 12px solid rgba(97, 97, 97, 0.233);
@@ -169,7 +169,7 @@
           <p class="present_text">Present it at the event gate</p>
         </div>
         <div class="zojatech_logo">
-          <img src="./ith_logo.png" alt="ith logo" />
+          <!-- <img src="./ith_logo.png" alt="ith logo" /> -->
           <h2 class="zojatech_logo_text">Zojatix</h2>
         </div>
       </div>
@@ -177,16 +177,15 @@
       <div class="main_ticket_container">
         <div class="left_ticket_container">
           <div class="event_title_container">
-            <p class="company_title">{{$eventOwner}}</p>
-            <h2 class="event_title">{{$event}}</h2>
+            <h1 class="company_title">Organizer : {{$eventOwner}}</h1>
+            <h2 class="event_title">Even{{$event}}</h2>
           </div>
 
           <div class="location_container">
             <p class="location_text">
-              Landmark Event Center Plot 3 & 4, Water Corporation Road, Oniru,
-              Victoria Island Annex, Lagos, Lagos
+             Location:  {{$location}}
             </p>
-            <h4 class="time_text">{{$day}}, 8:00 AM (WAT)</h4>
+           <h3 class="time_text"> Date and Time: {{$date}}, {{$time}} AM (WAT)</h3>
           </div>
 
           <div class="main_ticket_footer">
@@ -199,11 +198,12 @@
 
             <div class="ticket_id_container">
               <p class="ticket_id_text">Ticket Id:-</p>
-              <h3 class="id_text">{{$id}}</h3>
+              <h3 class="id_text"><a href="{{$link}}">{{$id}}</a></h3>
             </div>
           </div>
         </div>
-        <div class="qr-code">{!! DNS2D::getBarcodeHTML('www.google.com', 'QRCODE') !!}</div>
+
+        <div class="qr-code">{!! DNS2D::getBarcodeHTML("{{$link}}", 'QRCODE') !!}</div>
         <!-- <img src="./qr_code.png" alt="qr code" /> -->
       </div>
 

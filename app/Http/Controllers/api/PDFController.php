@@ -14,10 +14,13 @@ class PDFController extends Controller
         $data =[
             'name'=> 'Isaac',
             'event' => 'BECON',
-            'day' => '2023-06-18',
+            'date' => '2023-06-18',
+            'time' => '10:00',
             'quantity' => 4,
-            'id' => '123efb9808p',
-            'eventOwner'=>'EGFM'
+            'id' => '01h5q2h47tdggybqs8jggq4hv8',
+            'eventOwner'=>'EGFM',
+            'location'=>'Faith Plaza Bariga',
+            'link' => 'http://127.0.0.1:8000/api/v1/tickets/01h5q2h47tdggybqs8jggq4hv8',
         ];
         $pdf = Pdf::loadView('index', $data);
         return $pdf->download('ticket.pdf');
