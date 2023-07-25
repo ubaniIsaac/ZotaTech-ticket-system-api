@@ -21,7 +21,7 @@ class PaymentController extends Controller
     public function __construct()
     {
 
-        $this->paymentService = new PaymentService();
+        $this->paymentService = app(PaymentService::class);
     }
 
 
@@ -57,6 +57,7 @@ class PaymentController extends Controller
 
             if ($response['status'] == true) {
                 $payment = Payment::where('reference', $request->reference)->first();
+
                 if ($payment?->status == 'successful') {
                     return response()->json([
                         "message" => "Payment already verified",
@@ -72,13 +73,12 @@ class PaymentController extends Controller
 
                 $ticket = Ticket::create($ticket_data);
                 $event = $ticket->event;
-                $event?->available_seats -= $ticket->quantity;
+                $event->available_seats -= $ticket->quantity;
                 $event?->save();
 
                 $user = User::findorfail($ticket->user_id);
 
-                event(new BookTicket($user, $ticket));// @phpstan-ignore-line
-
+                event(new BookTicket($user, $ticket)); // @phpstan-ignore-line
 
                 return response()->json([
                     "message" => "Payment Successful. Ticket booked",
@@ -88,12 +88,13 @@ class PaymentController extends Controller
             }
         } catch (\Throwable $th) {
             return response()->json([
-                "message" => "Reference code invalid",
+                "message" => $th,
+                'status' => 302
             ], 302);
         }
 
         return response()->json([
-            "message" => " Payament failed",
+            "message" => "Payament failed",
             'status' => 400
         ]);
     }

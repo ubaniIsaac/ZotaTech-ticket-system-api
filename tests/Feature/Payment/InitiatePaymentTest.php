@@ -21,6 +21,7 @@ it('initiates a transaction', function () {
         'quantity' => 2,
         'reference' => $reference
     ];
+    
 
     $response = $this->postJson(route('pay'), $data);
     $response->assertStatus(200);
