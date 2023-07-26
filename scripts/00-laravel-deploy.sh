@@ -20,3 +20,6 @@ php artisan migrate --force
 
 echo "Passport install..."
 php artisan passport:install
+
+echo "Storage Link..."
+php artisan storage:link
