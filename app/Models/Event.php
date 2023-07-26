@@ -18,7 +18,7 @@ class  Event extends Model implements HasMedia
 {
     use HasFactory, HasUlids, InteractsWithMedia;
 
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -40,34 +40,32 @@ class  Event extends Model implements HasMedia
         'user_id',
     ];
 
-      /**
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
      */
-    protected $casts = [
-    ];
+    protected $casts = [];
 
 
     /**
      * Get the image for the event.
      */
-        public function image(): Attribute
-        {
-            return Attribute::make(get: fn () => $this->getFirstMedia('image') ?: null );
-        }
+    public function image(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->getFirstMedia('image') ?: null);
+    }
 
-   
+
 
     /**
      * Get the url details for the event.
      */
 
-     public function url(): HasOne
-     {
-         return $this->hasOne(Url::class);
-     }
-
+    public function url(): HasOne
+    {
+        return $this->hasOne(Url::class);
+    }
 
     /**
      * Get the user that owns the event.
@@ -75,5 +73,20 @@ class  Event extends Model implements HasMedia
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+
+    public static function booted()
+    {
+        parent::booted();
+        static::created(function (Event $event) {
+        $url_data = Helper::generateLink($event->title);
+         $event->url()->create([
+                'long_url' => $url_data['long_url'],
+                'short_id' => $url_data['short_id'],
+                'short_url' => $url_data['short_url'],
+                'clicks' => 0,
+            ]);
+        });
     }
 }
