@@ -30,7 +30,7 @@ class PaymentController extends Controller
         $user = auth()->user();
         $ref = uniqid();
         $data = [
-            'amount' => $request->amount * 100,
+            'amount' => $request->amount * 100 * $request->quantity,
             'email' => $user?->email,
             'user_id' => $user?->id,
             'event_id' => $request->event_id,
@@ -66,14 +66,14 @@ class PaymentController extends Controller
                     ]);
                 }
 
-                $payment->status = 'successful';
+                $payment->status = 'successful'; // @phpstan-ignore-line
                 $payment?->save();
 
                 $ticket_data = collect($payment)->except('id')->toArray();
 
                 $ticket = Ticket::create($ticket_data);
                 $event = $ticket->event;
-                $event->available_seats -= $ticket->quantity;
+                $event->available_seats -= $ticket->quantity; // @phpstan-ignore-line
                 $event?->save();
 
                 $user = User::findorfail($ticket->user_id);

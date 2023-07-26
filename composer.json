@@ -46,6 +46,7 @@
     },
     "scripts": {
         "analyse": "vendor/bin/phpstan analyse",
+        "test" : "vendor/bin/pest",
 
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
