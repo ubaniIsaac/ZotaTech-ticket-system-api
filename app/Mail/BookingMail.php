@@ -64,9 +64,9 @@ class BookingMail extends Mailable
             'time' => $this->ticket->event?->time,
             'quantity' => $this->ticket->quantity,
             'id' => $this->ticket->id,
-            'eventOwner'=>$this->ticket->event?->user?->name,
-            'location'=>$this->ticket->event?->location,
-            'link' => config('app.url').'api/v1/tickets/'.$this->ticket->id,
+            'eventOwner'=>$this->ticket->event->user->name,
+            'location'=>$this->ticket->event->location,
+            'link' => config('app.url').'/api/v1/tickets/'.$this->ticket->id,
         ];
         $pdf = Pdf::loadView('ticket', $data);
         return [Attachment::fromData(fn () => $pdf->output(), 'ticket.pdf')];
