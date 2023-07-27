@@ -222,6 +222,7 @@ class EventController extends Controller
         }
 
         $filteredEvents = $event->get();
+
         return response()->json([
             'message' => 'Searched events listed successfully',
             'data' => EventResources::collection($filteredEvents)

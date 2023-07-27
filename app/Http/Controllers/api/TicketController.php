@@ -149,7 +149,7 @@ class TicketController extends Controller
             $ticket_type = $request->input('ticket_type');
             $ticket->where('ticket_type', 'like', '%' .$ticket_type. '%');
         }
-
+        
         $filteredTickets = $ticket->get();
         return response()->json([
             'message' => 'Searched tickets listed successfully',
