@@ -135,4 +135,25 @@ class TicketController extends Controller
     
         return response()->json(['message' => 'Ticket deleted successfully'], Response::HTTP_OK);
     }
+
+    public function searchTickets(Request $request) 
+    {
+        $ticket = Ticket::query();
+
+        if ($request->has('amount')) {
+            $amount = $request->input('amount');
+            $ticket->where('amount', 'like', '%' .$amount. '%');
+        }
+
+        if ($request->has('ticket_type')) {
+            $ticket_type = $request->input('ticket_type');
+            $ticket->where('ticket_type', 'like', '%' .$ticket_type. '%');
+        }
+        
+        $filteredTickets = $ticket->get();
+        return response()->json([
+            'message' => 'Searched tickets listed successfully',
+            'data' => $filteredTickets
+        ]);
+    }
 }
