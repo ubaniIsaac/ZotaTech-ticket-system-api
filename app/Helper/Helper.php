@@ -15,7 +15,7 @@ class Helper
         return $domain;
     }
 
-    public static  function generateLink($title)
+    public static  function generateLink(string $title)
     {
         $ulid = Str::ulid();
         $array = explode(' ', $title);

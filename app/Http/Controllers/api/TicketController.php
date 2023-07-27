@@ -36,7 +36,8 @@ class TicketController extends Controller
 
         $user = User::findorfail($ticket->user_id);
 
-        event(new BookTicket($user, $ticket));
+        event(new BookTicket($user, $ticket)); // @phpstan-ignore-line
+
 
         return response()->json([
             'data' => new TicketResource($ticket)
