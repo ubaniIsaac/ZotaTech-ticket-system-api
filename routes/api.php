@@ -55,6 +55,10 @@ Route::prefix('v1')->group(function () {
 
         Route::get('tickets/{id}', [TicketController::class, 'show']);
 
+        Route::get('search/events/filter', [EventController::class, 'searchEvents'])->name('searchEvents');
+        
+        Route::get('search/tickets/filter', [TicketController::class, 'searchTickets'])->name('searchTickets'); 
+
     });
 
 
