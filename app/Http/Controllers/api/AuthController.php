@@ -44,27 +44,18 @@ class AuthController extends Controller
         $data = $request->validated();
 
         if ($request->has('account_number') && $request->has('bank_code')) {
-            try {
-                //create paystack subaccount
-                $data = [
-                    'business_name' => $request->name,
-                    'bank_code' => $request->bank_code,
-                    'account_number' => $request->account_number,
-                    'percentage_charge' => 20
-                ];
-                $payService = app(PaymentService::class);
 
-                $result = $payService->createSubaccount($data);
-                if (!is_array($result)) {
-                    throw new Exception($result->getMessage(), 1);
-                }
-                $data = array_merge($request->validated(), ['subaccount_code' => $result['subaccount_code']]);
-            } catch (\Throwable $th) {
+            $payService = app(PaymentService::class);
+
+            $paystackResponse = $payService->createSubaccount($data);
+
+            if (!is_array($paystackResponse)) {
                 return response()->json([
-                    'message' => 'Problem uploading account details',
-                    'data' => $th->getMessage()
-                ], 302);
-            }
+                    'message' => 'Problem creating account check details',
+                    'error' => $paystackResponse
+                ], Response::HTTP_BAD_REQUEST);
+            };
+            $data = $paystackResponse;
         }
 
         // Logic for handling user registration
